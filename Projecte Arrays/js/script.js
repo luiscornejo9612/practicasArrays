@@ -107,7 +107,7 @@ async function mostrarDades() {
 		}
 		// Llamada a printList
 		printList();
-		
+
 	} catch (error) {
 		console.error("Error recuperando datos:", error);
 	}
@@ -120,6 +120,7 @@ function printList() {
     const table = document.createElement('table');
     table.border = '1';
     table.style.borderCollapse = 'collapse';
+	
 
     // Cabecera de la tabla
     const headerRow = table.insertRow(0);
@@ -127,6 +128,7 @@ function printList() {
         const headerCell = document.createElement('th');
         headerCell.textContent = key;
         headerRow.appendChild(headerCell);
+		
     }
 
     // Filas de datos
