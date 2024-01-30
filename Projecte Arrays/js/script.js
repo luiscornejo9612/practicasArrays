@@ -1,4 +1,4 @@
-const datosCombinados = [];
+var datosCombinados = [];
 
 async function fetchData(url) {
     const response = await fetch(url);
@@ -10,39 +10,37 @@ async function fetchData(url) {
 
 //CARGAR LOS DATOS DE LOS JSON EN UNA TABLA POR CONSOLA 
 function mostrarDadesConsola() {
-    recargarPagina();
     // Realizar la solicitud para obtener los datos de los Pokémon
-    fetchData("js/data/pokemon.json")
-        .then((pokemonData) => {
-            // Realizar la solicitud para obtener los datos de los municipios
-            return fetchData("js/data/municipis.json").then((municipisData) => {
-                // Realizar la solicitud para obtener los datos de los movies
-                return fetchData("js/data/movies.json").then((moviesData) => {
+    fetchData("js/data/pokemon.json").then((pokemonData) => {
+        // Realizar la solicitud para obtener los datos de los municipios
+        return fetchData("js/data/municipis.json").then((municipisData) => {
+            // Realizar la solicitud para obtener los datos de los movies
+            return fetchData("js/data/movies.json").then((moviesData) => {
 
-                    // Realizar la solicitud para obtener los datos de los meteoritos
-                    return fetchData("js/data/earthMeteorites.json").then((meteoritesData) => {
-                        const datosCombinados = [];
+                // Realizar la solicitud para obtener los datos de los meteoritos
+                return fetchData("js/data/earthMeteorites.json").then((meteoritesData) => {
+                    const datosCombinados = [];
 
-                        for (let i = 0; i < Math.min(pokemonData.pokemon.length,
-                            municipisData.elements.length, meteoritesData.length, moviesData.length); i++) {
-                            const pokemon = pokemonData.pokemon[i];
-                            const municipio = municipisData.elements[i];
-                            const movies = moviesData[i];
-                            const meteorite = meteoritesData[i];
+                    for (let i = 0; i < Math.min(pokemonData.pokemon.length,
+                        municipisData.elements.length, meteoritesData.length, moviesData.length); i++) {
+                        const pokemon = pokemonData.pokemon[i];
+                        const municipio = municipisData.elements[i];
+                        const movies = moviesData[i];
+                        const meteorite = meteoritesData[i];
 
-                            datosCombinados.push({
-                                Nombre_Pokemon: pokemon.name,
-                                Nombre_Municipio: municipio.municipi_nom,
-                                Movies_Tiltle: movies.title,
-                                Nombre_Meteorite: meteorite.name
-                            });
-                        }
-                        // Mostrar la tabla en la consola
-                        console.table(datosCombinados);
-                    });
+                        datosCombinados.push({
+                            Nombre_Pokemon: pokemon.name,
+                            Nombre_Municipio: municipio.municipi_nom,
+                            Movies_Tiltle: movies.title,
+                            Nombre_Meteorite: meteorite.name
+                        });
+                    }
+                    // Mostrar la tabla en la consola
+                    console.table(datosCombinados);
                 });
             });
-        })
+        });
+    })
         .catch((error) => console.error("Error recuperando datos:", error));
 }
 
@@ -87,9 +85,8 @@ function calcMedia() {
 
 
 async function mostrarDadesPokemon() {
-
-    location.reload();
     try {
+        datosCombinados=[];
         const [pokemonData] = await Promise.all([
             fetchData("js/data/pokemon.json")
         ]);
@@ -115,6 +112,7 @@ async function mostrarDadesPokemon() {
 
 async function mostrarDadesmovies() {
     try {
+        datosCombinados=[];
         // Utiliza la función fetchData para obtener los datos del JSON
         const [moviesData] = await Promise.all([
             fetchData("js/data/movies.json")
@@ -140,7 +138,11 @@ async function mostrarDadesmovies() {
 }
 
 
+
+
+
 function printList() {
+
     const resultadoDiv = document.getElementById('resultado');
     resultadoDiv.innerHTML = ''; // Limpiar el contenido anterior
 
@@ -181,11 +183,6 @@ function printList() {
 
 
 
-
-
-
-
-
 /*
 // MUNICIPIS
 fetch("js/data/municipis.json")
@@ -195,19 +192,80 @@ fetch("js/data/municipis.json")
 	
     console.log(dades)
     console.log(dades[0].municipi_nom)
-});
+});*/
+
+
+function mostrarDadesmunicipis() {
+    try {
+        datosCombinados=[];
+        fetch("js/data/municipis.json")
+            .then((response) => response.json())
+            .then((data) => {
+                const dades = data.elements;
+
+                // Recorre los datos y muestra cada municipio en la consola
+                for (let i = 0; i < dades.length; i++) {
+                    const municipio = dades[i];
+
+                    datosCombinados.push({
+                        Municipi_Nom: municipio.municipi_nom,
+                        Provincia_nom: municipio.grup_provincia.provincia_nom,
+                        Imagen: municipio.municipi_escut,
+                        Comarca_nom: municipio.grup_comarca.comarca_nom      
+                    });
+                
+                    // Llamada a printList
+                    printList()         
+                }
+            });
+    } catch (error) {
+        console.error("Error recuperando datos:", error);
+    }
+}
+
+
+// METEORITS
+// fetch("js/data/earthMeteorites.json")
+// .then((response) => response.json())
+// .then((data) => {
+//     dades = data;		
+	
+//     console.log(dades)
+//     console.log(dades[0].name)
+// });
+
+
+function mostrarDadesearthMeteorites() {
+    try {
+        datosCombinados=[];
+        fetch("js/data/earthMeteorites.json")
+            .then((response) => response.json())
+            .then((data) => {
+                const dades = data.elements;
+
+                // Recorre los datos y muestra cada municipio en la consola
+                for (let i = 0; i < dades.length; i++) {
+                    const Meteorites = dades[i];
+
+                    datosCombinados.push({
+                        Municipi_Nom: Meteorites.municipi_nom,
+                        Provincia_nom: Meteorites.grup_provincia.provincia_nom,
+                        Imagen: Meteorites.municipi_escut,
+                        Comarca_nom: Meteorites.grup_comarca.comarca_nom      
+                    });
+                
+                    // Llamada a printList
+                    printList()         
+                }
+            });
+    } catch (error) {
+        console.error("Error recuperando datos:", error);
+    }
+}
+
 
 /*
 
-// METEORITS
-fetch("js/data/earthMeteorites.json")
-.then((response) => response.json())
-.then((data) => {
-    dades = data;		
-	
-    console.log(dades)
-    console.log(dades[0].name)
-});
 
 
 // MOVIES
