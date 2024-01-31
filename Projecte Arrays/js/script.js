@@ -52,7 +52,7 @@ function mostrarDadesConsola() {
 // .then((response) => response.json())
 // .then((data) => {
 //     dades = data.pokemon;		
-	
+
 //     console.log(dades)
 //     console.log(dades[0].name)
 // });
@@ -62,7 +62,7 @@ async function mostrarDadesPokemon() {
         // Utilizar fetchData
         const data = await fetchData("js/data/pokemon.json");
         const dades = data.pokemon;
-        
+
         // CONTADOR PARA ORDENAR LOS ELEMENTOS DE FORMA HACENDENTE O DECENDENTE 
         let num = 1;
 
@@ -89,7 +89,7 @@ async function mostrarDadesPokemon() {
 // .then((response) => response.json())
 // .then((data) => {
 //     dades = data.movies;		
-	
+
 //     console.log(dades)
 //     console.log(dades[0].title)
 // });
@@ -104,7 +104,7 @@ async function mostrarDadesmovies() {
         // Utilizar map para transformar los datos de manera más eficiente
         datosCombinados = data.map((movies) => ({
             Num: num++,
-            Title: movies.title,
+            Nombre: movies.title,
             Imagen: movies.url,
             Generes: movies.genres,
             Año: movies.year
@@ -185,7 +185,7 @@ async function mostrarDadesMeteorites() {
             Masa: meteorito.mass,
             Anyo: meteorito.year
         }));
-        
+
         // Llamada a printList después de que se han procesado todos los datos
         printList();
         console.log(datosCombinados);
@@ -253,14 +253,62 @@ function orderList(order) {
 
 
 //FUNCION PARA BUSCAR EL ELEMENTO MEDIANTE UN ALERT
-function searchList() {
-    var  valorBucar = prompt("Introduce el nombre del Pokémon a buscar:");
-    for (var clave in datosCombinados) {
-        if (datosCombinados.hasOwnProperty(clave) && datosCombinados[clave] === valorBucar) {
+async function searchList() {
+    var nombreBuscado = prompt("Introduce el nombre");
+    // Verificar que 'datosCombinados' está definido y no está vacío
+    const tienePeso = datosCombinados.some(pokemon => 'Peso' in pokemon);
+    if (datosCombinados && datosCombinados.length > 0 && tienePeso) {
+        const objetoBuscado = datosCombinados.find(pokemon => pokemon.Nombre.toLowerCase() === nombreBuscado.toLowerCase());
+
+        if (objetoBuscado) {
+            // Imprimir los datos del Pokémon encontrado
+            datosCombinados = [];
+            const dades = {
+                Num: objetoBuscado.Num,
+                Imagen: objetoBuscado.Imagen,
+                Nombre: objetoBuscado.Nombre,
+                Peso: objetoBuscado.Peso
+            };
+            datosCombinados.push(dades);
             printList();
+
+            datosCombinados = [];
+            // Utilizar fetchData
+            const data = await fetchData("js/data/pokemon.json");
+            const dads = data.pokemon;
+
+            // CONTADOR PARA ORDENAR LOS ELEMENTOS DE FORMA HACENDENTE O DECENDENTE 
+            let num = 1;
+
+            // Utilizar map para transformar los datos de manera más eficiente
+            datosCombinados = dads.map((pokemon) => ({
+                Num: num++,
+                Num: pokemon.num,
+                Imagen: pokemon.img,
+                Nombre: pokemon.name,
+                Peso: pokemon.weight
+            }));
+
+            console.log(datosCombinados);
         }
-    }   
+
+        // else if(){
+
+        // }
+        else if (nombreBuscado === null) {
+            console.log("Operación cancelada por el usuario.");
+        }
+        else {
+            alert("No se encontró ningún Pokémon con el nombre " + nombreBuscado);
+        }
+    } else {
+        alert("Error: 'datosCombinados' no está definido o está vacío.");
+    }
 }
+
+
+// Supongamos que 'datosCombinados' está definido y no está vacío antes de llamar a la función
+
 
 
 
