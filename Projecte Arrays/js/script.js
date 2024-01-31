@@ -1,5 +1,6 @@
 var datosCombinados = [];
 
+//FUNCION
 async function fetchData(url) {
     const response = await fetch(url);
     if (!response.ok) {
@@ -19,7 +20,7 @@ function mostrarDadesConsola() {
 
                 // Realizar la solicitud para obtener los datos de los meteoritos
                 return fetchData("js/data/earthMeteorites.json").then((meteoritesData) => {
-                    const datosCombinados = [];
+                    const datosConsola = [];
 
                     for (let i = 0; i < Math.min(pokemonData.pokemon.length,
                         municipisData.elements.length, meteoritesData.length, moviesData.length); i++) {
@@ -28,7 +29,7 @@ function mostrarDadesConsola() {
                         const movies = moviesData[i];
                         const meteorite = meteoritesData[i];
 
-                        datosCombinados.push({
+                        datosConsola.push({
                             Nombre_Pokemon: pokemon.name,
                             Nombre_Municipio: municipio.municipi_nom,
                             Movies_Tiltle: movies.title,
@@ -36,7 +37,7 @@ function mostrarDadesConsola() {
                         });
                     }
                     // Mostrar la tabla en la consola
-                    console.table(datosCombinados);
+                    console.table(datosConsola);
                 });
             });
         });
@@ -46,92 +47,72 @@ function mostrarDadesConsola() {
 
 
 
-function recargarPagina() {
-    location.reload();
-}
-
-
-
-
-function orderList(order) {
-    datosCombinados.sort((a, b) => {
-        const valueA = a.Nombre.toLowerCase();
-        const valueB = b.Nombre.toLowerCase();
-        return order === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
-    });
-    printList();
-}
-
-
-function searchList() {
-    const searchTerm = prompt("Introduce el nombre del Pokemon a buscar:");
-    if (searchTerm) {  // Verifica si el usuario ingresó un valor antes de procesar
-        const index = datosCombinados.findIndex(item => item.Nombre.toLowerCase() === searchTerm.toLowerCase());
-        if (index !== -1) {
-            alert(`El Pokemon ${searchTerm} se encuentra en la posición ${index + 1}`);
-
-
-        } else {
-            alert(`El Pokemon ${searchTerm} no fue encontrado`);
-        }
-    }
-}
-
-function calcMedia() {
-    const valores = datosCombinados.map(item => parseFloat(item.PESO.replace(' kg', '')));
-    const media = valores.reduce((acc, val) => acc + val, 0) / valores.length;
-    alert(`La media del peso de los Pokemon es: ${media.toFixed(2)} kg`);
-}
-
-
+// // POKEMON
+// fetch("js/data/pokemon.json")
+// .then((response) => response.json())
+// .then((data) => {
+//     dades = data.pokemon;		
+	
+//     console.log(dades)
+//     console.log(dades[0].name)
+// });
 async function mostrarDadesPokemon() {
     try {
-        datosCombinados=[];
-        const [pokemonData] = await Promise.all([
-            fetchData("js/data/pokemon.json")
-        ]);
+        datosCombinados = [];
+        // Utilizar fetchData
+        const data = await fetchData("js/data/pokemon.json");
+        const dades = data.pokemon;
+        
+        // CONTADOR PARA ORDENAR LOS ELEMENTOS DE FORMA HACENDENTE O DECENDENTE 
+        let num = 1;
 
-        for (let i = 0; i < Math.min(pokemonData.pokemon.length); i++) {
-            const pokemon = pokemonData.pokemon[i];
+        // Utilizar map para transformar los datos de manera más eficiente
+        datosCombinados = dades.map((pokemon) => ({
+            Num: num++,
+            Num: pokemon.num,
+            Imagen: pokemon.img,
+            Nombre: pokemon.name,
+            Peso: pokemon.weight
+        }));
 
-            datosCombinados.push({
-                NUM: pokemon.num,
-                Imagen: pokemon.img,
-                Nombre: pokemon.name,
-                Peso: pokemon.weight
-            });
-        }
-        // Llamada a printList
+        // Llamada a printList después de que se han procesado todos los datos
         printList();
-
     } catch (error) {
         console.error("Error recuperando datos:", error);
     }
 }
 
-
+// // MOVIES
+// fetch("js/data/movies.json")
+// .then((response) => response.json())
+// .then((data) => {
+//     dades = data.movies;		
+	
+//     console.log(dades)
+//     console.log(dades[0].title)
+// });
 async function mostrarDadesmovies() {
     try {
-        datosCombinados=[];
-        // Utiliza la función fetchData para obtener los datos del JSON
-        const [moviesData] = await Promise.all([
-            fetchData("js/data/movies.json")
-        ]);
+        datosCombinados = [];
+        // const response = await fetch("js/data/movies.json");
+        // const data = await response.json();
 
-        // Recorre los datos y agrégales al array datosCombinados
-        for (let i = 0; i < moviesData.length; i++) {
-            const movie = moviesData[i];
+        const data = await fetchData("js/data/movies.json");
 
-            datosCombinados.push({
-                Title: movie.title,
-                Imagen: movie.url,
-                Generes: movie.genres,
-                Año: movie.year
-            });
-        }
-        // Llamada a printList
+        // CONTADOR PARA ORDENAR LOS ELEMENTOS DE FORMA HACENDENTE O DECENDENTE 
+        let num = 1;
+
+        // Utilizar map para transformar los datos de manera más eficiente
+        datosCombinados = data.map((movies) => ({
+            Num: num++,
+            Title: movies.title,
+            Imagen: movies.url,
+            Generes: movies.genres,
+            Año: movies.year
+        }));
+
+        // Llamada a printList después de que se han procesado todos los datos
         printList();
-
     } catch (error) {
         console.error("Error recuperando datos:", error);
     }
@@ -139,10 +120,79 @@ async function mostrarDadesmovies() {
 
 
 
+/*
+// MUNICIPIS
+fetch("js/data/municipis.json")
+.then((response) => response.json())
+.then((data) => {
+    dades = data.elements;		
+	
+    console.log(dades)
+    console.log(dades[0].municipi_nom)
+});*/
+async function mostrarDadesmunicipis() {
+    try {
+        datosCombinados = [];
+        const data = await fetchData("js/data/municipis.json");
+        const dades = data.elements;
+
+        // CONTADOR PARA ORDENAR LOS ELEMENTOS DE FORMA HACENDENTE O DECENDENTE 
+        let num = 1;
+
+        // Utilizar map para transformar los datos de manera más eficiente
+        datosCombinados = dades.map((municipio) => ({
+            Num: num++,
+            Municipi_Nom: municipio.municipi_nom,
+            Provincia_nom: municipio.grup_provincia.provincia_nom,
+            Imagen: municipio.municipi_escut,
+            Comarca_nom: municipio.grup_comarca.comarca_nom
+        }));
+
+        // Llamada a printList después de que se han procesado todos los datos
+        printList();
+    } catch (error) {
+        console.error("Error recuperando datos:", error);
+    }
+}
 
 
+// METEORITS
+// fetch("js/data/earthMeteorites.json")
+// .then((response) => response.json())
+// .then((data) => {
+//     dades = data;		
+
+//     console.log(dades)
+//     console.log(dades[0].name)
+// });
+async function mostrarDadesMeteorites() {
+    try {
+        datosCombinados = [];
+        // Utilizar fetchData para obtener los datos de manera genérica
+        const data = await fetchData("js/data/earthMeteorites.json");
+
+        // CONTADOR PARA ORDENAR LOS ELEMENTOS DE FORMA HACENDENTE O DECENDENTE 
+        let num = 1;
+
+        // Utilizar map para transformar los datos de manera más eficiente
+        datosCombinados = data.map((meteorito) => ({
+            Num: num++,
+            Id: meteorito.id,
+            Name: meteorito.name,
+            Masa: meteorito.mass,
+            Anyo: meteorito.year
+        }));
+        
+        // Llamada a printList después de que se han procesado todos los datos
+        printList();
+
+    } catch (error) {
+        console.error("Error recuperando datos:", error);
+    }
+}
+
+// fUNCION PARA CREAR LA TABLA EN EL DOM
 function printList() {
-
     const resultadoDiv = document.getElementById('resultado');
     resultadoDiv.innerHTML = ''; // Limpiar el contenido anterior
 
@@ -181,101 +231,49 @@ function printList() {
     resultadoDiv.appendChild(table);
 }
 
-
-
-/*
-// MUNICIPIS
-fetch("js/data/municipis.json")
-.then((response) => response.json())
-.then((data) => {
-    dades = data.elements;		
-	
-    console.log(dades)
-    console.log(dades[0].municipi_nom)
-});*/
-
-
-function mostrarDadesmunicipis() {
-    try {
-        datosCombinados=[];
-        fetch("js/data/municipis.json")
-            .then((response) => response.json())
-            .then((data) => {
-                const dades = data.elements;
-
-                // Recorre los datos y muestra cada municipio en la consola
-                for (let i = 0; i < dades.length; i++) {
-                    const municipio = dades[i];
-
-                    datosCombinados.push({
-                        Municipi_Nom: municipio.municipi_nom,
-                        Provincia_nom: municipio.grup_provincia.provincia_nom,
-                        Imagen: municipio.municipi_escut,
-                        Comarca_nom: municipio.grup_comarca.comarca_nom      
-                    });
-                
-                    // Llamada a printList
-                    printList()         
-                }
-            });
-    } catch (error) {
-        console.error("Error recuperando datos:", error);
-    }
+//FUNCION PARA RECARGAR LA PAGINA
+function recargarPagina() {
+    location.reload();
 }
 
 
-// METEORITS
-// fetch("js/data/earthMeteorites.json")
-// .then((response) => response.json())
-// .then((data) => {
-//     dades = data;		
-	
-//     console.log(dades)
-//     console.log(dades[0].name)
-// });
-
-
-function mostrarDadesearthMeteorites() {
-    try {
-        datosCombinados=[];
-        fetch("js/data/earthMeteorites.json")
-            .then((response) => response.json())
-            .then((data) => {
-                const dades = data.elements;
-
-                // Recorre los datos y muestra cada municipio en la consola
-                for (let i = 0; i < dades.length; i++) {
-                    const Meteorites = dades[i];
-
-                    datosCombinados.push({
-                        Municipi_Nom: Meteorites.municipi_nom,
-                        Provincia_nom: Meteorites.grup_provincia.provincia_nom,
-                        Imagen: Meteorites.municipi_escut,
-                        Comarca_nom: Meteorites.grup_comarca.comarca_nom      
-                    });
-                
-                    // Llamada a printList
-                    printList()         
-                }
-            });
-    } catch (error) {
-        console.error("Error recuperando datos:", error);
-    }
+//FUNCION PARA ORDENAR LOS ELEMENTOS DE FORMA ACENDENTE Y DECENDENTE 
+function orderList(order) {
+    datosCombinados.sort((a, b) => {
+        const valueA = a.Num;
+        const valueB = b.Num;
+        return order === 'asc' ? valueA - valueB : valueB - valueA;
+    });
+    printList();
 }
 
 
-/*
+//FUNCION PARA BUSCAR EL ELEMENTO MEDIANTE UN ALERT
+function searchList() {
+    datosCombinados = [];
+    const searchTerm = prompt("Introduce el nombre del Pokémon a buscar:");
+    if (searchTerm) {
+        const foundPokemon = datosCombinados.find(item => item.Nombre.toLowerCase() === searchTerm.toLowerCase());
+        if (foundPokemon) {
+            alert(`Pokémon encontrado:\n${JSON.stringify(foundPokemon, null, 2)}`);
+        } else {
+            alert(`El Pokémon ${searchTerm} no fue encontrado`);
+        }
+    }
+    console.log(datosCombinados);
+}
 
 
 
-// MOVIES
-fetch("js/data/movies.json")
-.then((response) => response.json())
-.then((data) => {
-    dades = data.movies;		
-	
-    console.log(dades)
-    console.log(dades[0].title)
-});
 
-*/
+//FUNCION PARA CALCULAR LA MEDIA DEL PESO DE LOS POKEMON 
+function calcMedia() {
+    const valores = datosCombinados.map(item => parseFloat(item.PESO.replace(' kg', '')));
+    const media = valores.reduce((acc, val) => acc + val, 0) / valores.length;
+    alert(`La media del peso de los Pokemon es: ${media.toFixed(2)} kg`);
+}
+
+
+
+
+
