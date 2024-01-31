@@ -1,6 +1,6 @@
 var datosCombinados = [];
 
-//FUNCION
+//FUNCION PARA PASARLE LA URL DE JSON QUE QUEREMOS OBTENER
 async function fetchData(url) {
     const response = await fetch(url);
     if (!response.ok) {
@@ -77,6 +77,8 @@ async function mostrarDadesPokemon() {
 
         // Llamada a printList después de que se han procesado todos los datos
         printList();
+        console.log(datosCombinados);
+
     } catch (error) {
         console.error("Error recuperando datos:", error);
     }
@@ -94,9 +96,6 @@ async function mostrarDadesPokemon() {
 async function mostrarDadesmovies() {
     try {
         datosCombinados = [];
-        // const response = await fetch("js/data/movies.json");
-        // const data = await response.json();
-
         const data = await fetchData("js/data/movies.json");
 
         // CONTADOR PARA ORDENAR LOS ELEMENTOS DE FORMA HACENDENTE O DECENDENTE 
@@ -113,6 +112,8 @@ async function mostrarDadesmovies() {
 
         // Llamada a printList después de que se han procesado todos los datos
         printList();
+        console.log(datosCombinados);
+
     } catch (error) {
         console.error("Error recuperando datos:", error);
     }
@@ -150,6 +151,8 @@ async function mostrarDadesmunicipis() {
 
         // Llamada a printList después de que se han procesado todos los datos
         printList();
+        console.log(datosCombinados);
+
     } catch (error) {
         console.error("Error recuperando datos:", error);
     }
@@ -185,6 +188,7 @@ async function mostrarDadesMeteorites() {
         
         // Llamada a printList después de que se han procesado todos los datos
         printList();
+        console.log(datosCombinados);
 
     } catch (error) {
         console.error("Error recuperando datos:", error);
@@ -250,17 +254,12 @@ function orderList(order) {
 
 //FUNCION PARA BUSCAR EL ELEMENTO MEDIANTE UN ALERT
 function searchList() {
-    datosCombinados = [];
-    const searchTerm = prompt("Introduce el nombre del Pokémon a buscar:");
-    if (searchTerm) {
-        const foundPokemon = datosCombinados.find(item => item.Nombre.toLowerCase() === searchTerm.toLowerCase());
-        if (foundPokemon) {
-            alert(`Pokémon encontrado:\n${JSON.stringify(foundPokemon, null, 2)}`);
-        } else {
-            alert(`El Pokémon ${searchTerm} no fue encontrado`);
+    var  valorBucar = prompt("Introduce el nombre del Pokémon a buscar:");
+    for (var clave in datosCombinados) {
+        if (datosCombinados.hasOwnProperty(clave) && datosCombinados[clave] === valorBucar) {
+            printList();
         }
-    }
-    console.log(datosCombinados);
+    }   
 }
 
 
