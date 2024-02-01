@@ -7,29 +7,66 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	<script src="js/script.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <style>
 	body {
+		margin: 0;
+		padding: 20px; /* Espacio alrededor del contenido */
+		font-family: Arial, sans-serif;
+		background-color: #f4f4f4;
 		display: flex;
+		flex-direction: column; /* Cambiado a columna para apilar verticalmente */
 		align-items: center;
-		flex-direction: column;
 	}
 
-	
-</style>
+	#seleccionarOpcion {
+		margin-bottom: 20px; /* Espacio inferior entre el select y los botones */
+		padding: 10px;
+		font-size: 16px;
+	}
 
+	.button-container {
+		display: flex;
+		flex-direction: row; /* Los botones se colocarán en una fila */
+		margin-bottom: 20px; /* Espacio inferior entre los botones y la tabla */
+	}
+
+	button {
+		margin-right: 5px; /* Espacio entre los botones */
+		padding: 10px;
+		font-size: 14px;
+	}
+
+	#resultat {
+		padding: 10px;
+		border: 1px solid #ccc;
+		background-color: #fff;
+		width: 100%;
+	}
+
+	.chart-container {
+		margin-top: 20px;
+		width: 100%;
+		max-width: 700px;
+	}
+
+	canvas {
+		width: 100%;
+		height: auto;
+	}
+</style>
 <body>
 
 
-	<select id="seleccionarOpcion"  onchange="seleccionarAccion()" onclick="this.value=null;">
+	<select id="seleccionarOpcion" onchange="seleccionarAccion()" onclick="this.value=null;">
 		<option value="" disabled selected hidden>Selecciona una opción</option>
 		<option value="pokemon">Mostrar Datos Pokemon</option>
 		<option value="movies">Mostrar Datos Movies</option>
 		<option value="municipis">Mostrar Datos Municipis</option>
 		<option value="meteorites">Mostrar Datos Meteorites</option>
 		<option value="consola">Mostrar Datos Consola</option>
-	  </select>
+	</select>
 
 	<div id="resultat"></div>
 	<button onclick="recargarPagina()">Recargar Página</button>
@@ -37,10 +74,14 @@
 	<button onclick="orderList('desc')">Ordenar Descendente</button>
 	<button onclick="searchList()">Buscar</button>
 	<button onclick="calcMedia()">Calcular Media</button>
+	<button onclick="graficoPokemon()">Grafico Pokemon</button>
 
 	<br>
 	<div id="resultado"></div>
-
+	<br>
+	<div class="chart-container" style="position: relative; width:700px">
+		<canvas id="myChart"></canvas>
+	</div>
 </body>
 
 </html>

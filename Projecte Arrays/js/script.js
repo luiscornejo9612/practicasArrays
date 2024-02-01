@@ -45,8 +45,6 @@ function mostrarDadesConsola() {
         .catch((error) => console.error("Error recuperando datos:", error));
 }
 
-
-
 // // POKEMON
 // fetch("js/data/pokemon.json")
 // .then((response) => response.json())
@@ -72,7 +70,8 @@ async function mostrarDadesPokemon() {
             Num: pokemon.num,
             Imagen: pokemon.img,
             Nombre: pokemon.name,
-            Peso: pokemon.weight
+            Peso: pokemon.weight,
+            Type: pokemon.type
         }));
 
         // Llamada a printList después de que se han procesado todos los datos
@@ -200,7 +199,7 @@ let opcionSeleccionada;
 
 
 function seleccionarAccion() {
-
+    
     opcionSeleccionada = document.getElementById("seleccionarOpcion").value;
 
     switch (opcionSeleccionada) {
@@ -223,8 +222,6 @@ function seleccionarAccion() {
             break;
     }
 
-    // Imprimirá el valor después de la asignación
-    console.log(opcionSeleccionada);
 }
 
 // fUNCION PARA CREAR LA TABLA EN EL DOM
@@ -265,6 +262,11 @@ function printList() {
     });
 
     resultadoDiv.appendChild(table);
+}
+//FUNCON PARA LIMPIAR LA TABLA 
+function clearTable() {
+    const resultadoDiv = document.getElementById('resultado');
+    resultadoDiv.innerHTML = '';
 }
 
 //FUNCION PARA RECARGAR LA PAGINA
@@ -369,12 +371,103 @@ async function searchList() {
 }
 
 
+
 //FUNCION PARA CALCULAR LA MEDIA DEL PESO DE LOS POKEMON 
 function calcMedia() {
-    const valores = datosCombinados.map(item => parseFloat(item.PESO.replace(' kg', '')));
-    const media = valores.reduce((acc, val) => acc + val, 0) / valores.length;
-    alert(`La media del peso de los Pokemon es: ${media.toFixed(2)} kg`);
+    // Obtener todas las filas de la tabla
+    let filas = document.querySelectorAll("#resultado table tbody tr");
+
+    // Array para almacenar los valores numéricos de la columna Peso
+    let valoresPeso = [];
+
+    // Iterar sobre cada fila (comenzando desde la segunda fila, ya que la primera tiene encabezados)
+    for (let i = 1; i < filas.length; i++) {
+        // Obtener la celda de la fila actual que contiene el peso
+        let celdaPeso = filas[i].querySelector("td:nth-child(4)");
+
+        // Verificar si se encontró la celda antes de intentar acceder a su contenido
+        if (celdaPeso) {
+            // Extraer el valor numérico eliminando 'kg' y convirtiéndolo a número
+            let valorNumerico = parseFloat(celdaPeso.textContent.replace('kg', '').trim());
+
+            // Verificar si el valor es un número válido y agregarlo al array
+            if (!isNaN(valorNumerico)) {
+                valoresPeso.push(valorNumerico);
+            }
+        }
+    }
+
+    // Calcular la media de los valores de la columna Peso
+    if (valoresPeso.length > 0) {
+        const suma = valoresPeso.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        const media = suma / valoresPeso.length;
+
+        alert(`La media es: ${media.toFixed(2)}`);
+    } else {
+        alert('No hay valores válidos para calcular');
+    }
 }
+
+// const typePkemon = datosCombinados.map((pokemon) => ({
+//     Type: pokemon.type
+// }));
+// console.log(typePkemon)
+
+
+
+
+//Defineix els arrays
+let arrayLabels = ["Grass", "Poison", "Fire", "Flying", "Water", "Bug", "Normal", "Electric", "Ground", "Fighting", "Psychic", "Rock", "Ice", "Ghost", "Dragon"];
+let arrayDadesGrafPokemons = [14, 33, 12, 19, 32, 12, 24, 9, 14, 8, 14, 11, 5, 3, 3];
+let arrayDadesGrafMovies = [185, 53, 39, 60, 27, 15, 57, 28, 8, 27, 32, 33, 44, 28, 25, 22, 5, 8, 4, 6, 10];
+
+// Genera colors aleatoris
+function getRandomColor() {
+    return `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 1)`;
+}
+
+function graficoPokemon() {
+    clearTable();
+    let borderColorArray = arrayLabels.map(() => getRandomColor());
+    let backgroundColorArray = borderColorArray.map(color => color.replace('rgba(rrr,ggg,bbb, 0.2)').replace('rgba(rrr,ggg,bbb)'));
+
+    //Genera el gràfic
+    const data = {
+        labels: arrayLabels,
+        datasets: [
+            {
+                label: 'Pokemons',
+                data: arrayDadesGrafPokemons,
+                backgroundColor: backgroundColorArray,
+                borderColor: borderColorArray,
+                borderWidth: 1
+            },
+            {
+                label: 'Movies',
+                data: arrayDadesGrafMovies,
+                backgroundColor: backgroundColorArray,
+                borderColor: borderColorArray,
+                borderWidth: 1
+            }
+        ]
+    };
+
+    const config = {
+        type: 'polarArea',
+        data: data,
+    };
+
+    const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    ); 
+}
+
+
+
+
+
+
 
 
 
