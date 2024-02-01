@@ -15,24 +15,32 @@
 		align-items: center;
 		flex-direction: column;
 	}
+
+	
 </style>
 
 <body>
+
+
+	<select id="seleccionarOpcion"  onchange="seleccionarAccion()" onclick="this.value=null;">
+		<option value="" disabled selected hidden>Selecciona una opción</option>
+		<option value="pokemon">Mostrar Datos Pokemon</option>
+		<option value="movies">Mostrar Datos Movies</option>
+		<option value="municipis">Mostrar Datos Municipis</option>
+		<option value="meteorites">Mostrar Datos Meteorites</option>
+		<option value="consola">Mostrar Datos Consola</option>
+	  </select>
+
 	<div id="resultat"></div>
 	<button onclick="recargarPagina()">Recargar Página</button>
-	<button onclick="mostrarDadesPokemon()">mostrarDades Pokemon</button>
-	<button onclick="mostrarDadesmovies()">mostrarDades movies</button>
-	<button onclick="mostrarDadesmunicipis()">mostrarDades municipis</button>
-	<button onclick="mostrarDadesMeteorites()">mostrarDades meteorites</button>
-	<button onclick="mostrarDadesConsola()">mostrarDades consola</button>
 	<button onclick="orderList('asc')">Ordenar Ascendente</button>
 	<button onclick="orderList('desc')">Ordenar Descendente</button>
 	<button onclick="searchList()">Buscar</button>
 	<button onclick="calcMedia()">Calcular Media</button>
 
-
+	<br>
 	<div id="resultado"></div>
-	
+
 </body>
 
 </html>

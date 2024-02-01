@@ -1,4 +1,4 @@
-var datosCombinados = [];
+let datosCombinados = [];
 
 //FUNCION PARA PASARLE LA URL DE JSON QUE QUEREMOS OBTENER
 async function fetchData(url) {
@@ -195,6 +195,38 @@ async function mostrarDadesMeteorites() {
     }
 }
 
+
+let opcionSeleccionada;
+
+
+function seleccionarAccion() {
+
+    opcionSeleccionada = document.getElementById("seleccionarOpcion").value;
+
+    switch (opcionSeleccionada) {
+        case "pokemon":
+            mostrarDadesPokemon();
+            break;
+        case "movies":
+            mostrarDadesmovies();
+            break;
+        case "municipis":
+            mostrarDadesmunicipis();
+            break;
+        case "meteorites":
+            mostrarDadesMeteorites();
+            break;
+        case "consola":
+            mostrarDadesConsola();
+            break;
+        default:
+            break;
+    }
+
+    // Imprimirá el valor después de la asignación
+    console.log(opcionSeleccionada);
+}
+
 // fUNCION PARA CREAR LA TABLA EN EL DOM
 function printList() {
     const resultadoDiv = document.getElementById('resultado');
@@ -251,66 +283,90 @@ function orderList(order) {
     printList();
 }
 
+function buscarObjetoPorNombre(datos, nombreBuscado, propiedadNombre = "Nombre") {
+    return datos.find(item => item[propiedadNombre].toLowerCase() === nombreBuscado.toLowerCase());
+}
 
 //FUNCION PARA BUSCAR EL ELEMENTO MEDIANTE UN ALERT
 async function searchList() {
     var nombreBuscado = prompt("Introduce el nombre");
-    // Verificar que 'datosCombinados' está definido y no está vacío
-    const tienePeso = datosCombinados.some(pokemon => 'Peso' in pokemon);
-    if (datosCombinados && datosCombinados.length > 0 && tienePeso) {
-        const objetoBuscado = datosCombinados.find(pokemon => pokemon.Nombre.toLowerCase() === nombreBuscado.toLowerCase());
 
-        if (objetoBuscado) {
-            // Imprimir los datos del Pokémon encontrado
+    if (nombreBuscado && datosCombinados.length > 0) {
+        let objetoBuscado;
+
+        switch (opcionSeleccionada) {
+            case "pokemon":
+                objetoBuscado = buscarObjetoPorNombre(datosCombinados, nombreBuscado);
+                break;
+            case "movies":
+                objetoBuscado = buscarObjetoPorNombre(datosCombinados, nombreBuscado);
+                break;
+            case "municipis":
+                objetoBuscado = buscarObjetoPorNombre(datosCombinados, nombreBuscado, "Municipi_Nom");
+                break;
+            case "meteorites":
+                objetoBuscado = buscarObjetoPorNombre(datosCombinados, nombreBuscado, "Name");
+                break;
+            default:
+                alert("Error: Opción no válida.");
+                return;
+        }
+
+        if (objetoBuscado && opcionSeleccionada == "pokemon") {
             datosCombinados = [];
             const dades = {
-                Num: objetoBuscado.Num,
+                Num: objetoBuscado.Num++,
                 Imagen: objetoBuscado.Imagen,
                 Nombre: objetoBuscado.Nombre,
                 Peso: objetoBuscado.Peso
             };
             datosCombinados.push(dades);
             printList();
-
-            datosCombinados = [];
-            // Utilizar fetchData
-            const data = await fetchData("js/data/pokemon.json");
-            const dads = data.pokemon;
-
-            // CONTADOR PARA ORDENAR LOS ELEMENTOS DE FORMA HACENDENTE O DECENDENTE 
-            let num = 1;
-
-            // Utilizar map para transformar los datos de manera más eficiente
-            datosCombinados = dads.map((pokemon) => ({
-                Num: num++,
-                Num: pokemon.num,
-                Imagen: pokemon.img,
-                Nombre: pokemon.name,
-                Peso: pokemon.weight
-            }));
-
-            console.log(datosCombinados);
         }
 
-        // else if(){
-
-        // }
-        else if (nombreBuscado === null) {
-            console.log("Operación cancelada por el usuario.");
+        else if (objetoBuscado && opcionSeleccionada == "movies") {
+            datosCombinados = [];
+            const dades = {
+                Num: objetoBuscado.Num++,
+                Nombre: objetoBuscado.Nombre,
+                Imagen: objetoBuscado.Imagen,
+                Generes: objetoBuscado.Generes,
+                Año: objetoBuscado.Año
+            };
+            datosCombinados.push(dades);
+            printList();
+        }
+        else if (objetoBuscado && opcionSeleccionada == "municipis") {
+            datosCombinados = [];
+            const dades = {
+                Num: objetoBuscado.Num++,
+                Municipi_Nom: objetoBuscado.Municipi_Nom,
+                Provincia_nom: objetoBuscado.Provincia_nom,
+                Imagen: objetoBuscado.Imagen,
+                Comarca_nom: objetoBuscado.Comarca_nom
+            };
+            datosCombinados.push(dades);
+            printList();
+        }
+        else if (objetoBuscado && opcionSeleccionada == "meteorites") {
+            datosCombinados = [];
+            const dades = {
+                Num: objetoBuscado.Num++,
+                Id: objetoBuscado.Id,
+                Name: objetoBuscado.Name,
+                Masa: objetoBuscado.Masa,
+                Anyo: objetoBuscado.Anyo
+            };
+            datosCombinados.push(dades);
+            printList();
         }
         else {
-            alert("No se encontró ningún Pokémon con el nombre " + nombreBuscado);
+            alert(`El objeto ${opcionSeleccionada} no fue encontrado`);
         }
     } else {
         alert("Error: 'datosCombinados' no está definido o está vacío.");
     }
 }
-
-
-// Supongamos que 'datosCombinados' está definido y no está vacío antes de llamar a la función
-
-
-
 
 
 //FUNCION PARA CALCULAR LA MEDIA DEL PESO DE LOS POKEMON 
